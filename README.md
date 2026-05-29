@@ -21,6 +21,8 @@
 # Backend
 cd backend
 npm install
+copy .env.example .env       # Windows
+# cp .env.example .env       # Mac/Linux
 npx prisma migrate dev --name init
 npm run db:seed
 npm run dev          # → http://localhost:3000
