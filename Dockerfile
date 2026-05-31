@@ -13,7 +13,7 @@ FROM base AS backend-builder
 COPY backend/package*.json ./backend/
 RUN cd backend && npm ci
 COPY backend/ ./backend/
-RUN cd backend && npx prisma generate && npm run build
+RUN cd backend && npx prisma generate && npm run build && npx tsc -p tsconfig.seed.json
 
 # Production image
 FROM node:20-alpine AS runner
@@ -26,12 +26,9 @@ COPY --from=backend-builder /app/backend/node_modules ./node_modules
 COPY --from=backend-builder /app/backend/prisma ./prisma
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
-# Copy seed script for entrypoint
-COPY --from=backend-builder /app/backend/prisma/seed.* ./prisma/
-
 ENV NODE_ENV=production
 ENV PORT=3000
 
 EXPOSE 3000
 
-CMD sh -c "npx prisma migrate deploy && node dist/index.js"
+CMD sh -c "npx prisma migrate deploy && node dist/prisma/seed.js && node dist/index.js"
