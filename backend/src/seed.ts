@@ -3,7 +3,14 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Wipe in dependency order
+  // Skip seed if data already exists (preserves production data between deploys)
+  const existing = await prisma.client.count();
+  if (existing > 0) {
+    console.log(`Seed skipped: database already has ${existing} clients`);
+    return;
+  }
+
+  // Wipe in dependency order (runs only on empty DB)
   await prisma.estimateService.deleteMany();
   await prisma.estimate.deleteMany();
   await prisma.project.deleteMany();
