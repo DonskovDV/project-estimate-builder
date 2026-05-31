@@ -24,6 +24,7 @@ export default function App() {
   return (
     <>
       <header className="app-header">
+        <div className="app-header-inner">
         <h1>Project Estimate Builder</h1>
         <nav className="nav">
           {(['projects', 'clients', 'services', 'analytics'] as Tab[]).map((t) => (
@@ -36,6 +37,7 @@ export default function App() {
             </button>
           ))}
         </nav>
+        </div>
       </header>
 
       <main className="page">
