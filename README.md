@@ -44,12 +44,16 @@ docker compose up --build
 ```
 
 Приложение доступно на **http://localhost:3000** (фронтенд + бэкенд на одном порту).
+Seed-данные заливаются автоматически при старте контейнера.
 
-Seed при Docker-запуске:
+### Вариант 3 — Продакшн (Railway)
 
-```bash
-docker compose exec app sh -c "DATABASE_URL=file:/app/data/prod.db node -e \"require('./dist/node_modules/.bin/ts-node')\" || npx ts-node prisma/seed.ts"
-```
+Приложение задеплоено и доступно по ссылке:
+
+**https://project-estimate-builder-production.up.railway.app/**
+
+Деплой настроен через GitHub: любой push в `main` автоматически обновляет прод.
+При старте контейнера автоматически накатываются миграции и заливаются seed-данные.
 
 ---
 
