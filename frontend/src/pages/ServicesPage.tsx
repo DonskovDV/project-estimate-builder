@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type React from 'react';
 import { api, CreateServiceDto, Service, SERVICE_CATEGORIES, formatMoney } from '../api';
 
 export default function ServicesPage() {
@@ -97,6 +98,29 @@ export default function ServicesPage() {
   );
 }
 
+// ── Client-side validation ───────────────────────────────────────────────────
+
+type ServiceField = 'name' | 'basePrice' | 'baseDays';
+const SERVICE_FIELD_ORDER: ServiceField[] = ['name', 'basePrice', 'baseDays'];
+
+function validateServiceField(field: ServiceField, form: CreateServiceDto): string | null {
+  switch (field) {
+    case 'name':      return form.name.trim() ? null : 'Название обязательно';
+    case 'basePrice': return form.basePrice > 0 ? null : 'Стоимость должна быть больше 0';
+    case 'baseDays':  return form.baseDays >= 1 ? null : 'Срок должен быть не менее 1 дня';
+  }
+}
+
+function firstServiceError(form: CreateServiceDto): { field: ServiceField; message: string } | null {
+  for (const field of SERVICE_FIELD_ORDER) {
+    const msg = validateServiceField(field, form);
+    if (msg) return { field, message: msg };
+  }
+  return null;
+}
+
+// ── Form component ───────────────────────────────────────────────────────────
+
 function ServiceForm({ service, onClose, onSaved, onError }: {
   service: Service | null;
   onClose: () => void;
@@ -109,14 +133,24 @@ function ServiceForm({ service, onClose, onSaved, onError }: {
       : { name: '', category: 'design', basePrice: 0, baseDays: 1, isRequired: false, isActive: true },
   );
   const [saving, setSaving] = useState(false);
-  const [localError, setLocalError] = useState('');
+  const [serverError, setServerError] = useState('');
+  const [fieldError, setFieldError] = useState<{ field: ServiceField; message: string } | null>(null);
 
-  const set = <K extends keyof CreateServiceDto>(k: K, v: CreateServiceDto[K]) =>
-    setForm((f) => ({ ...f, [k]: v }));
+  const set = <K extends keyof CreateServiceDto>(k: K, v: CreateServiceDto[K]) => {
+    const next = { ...form, [k]: v };
+    setForm(next);
+    if (fieldError && (k === 'name' || k === 'basePrice' || k === 'baseDays')) {
+      setFieldError(firstServiceError(next));
+    }
+  };
 
   const submit = async () => {
+    const err = firstServiceError(form);
+    if (err) { setFieldError(err); return; }
+
     setSaving(true);
-    setLocalError('');
+    setServerError('');
+    setFieldError(null);
     try {
       if (service) {
         await api.updateService(service.id, form);
@@ -126,22 +160,32 @@ function ServiceForm({ service, onClose, onSaved, onError }: {
       onSaved();
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Ошибка';
-      setLocalError(msg);
+      setServerError(msg);
       onError(msg);
     } finally {
       setSaving(false);
     }
   };
 
+  const inputStyle = (f: ServiceField): React.CSSProperties =>
+    fieldError?.field === f ? { borderColor: '#c62828', background: '#fff8f8' } : {};
+
   return (
     <div className="modal-backdrop">
       <div className="modal">
         <h3>{service ? 'Редактировать услугу' : 'Новая услуга'}</h3>
-        {localError && <div className="alert alert-error">{localError}</div>}
+        {serverError && <div className="alert alert-error">{serverError}</div>}
         <div className="form">
           <div className="field">
             <label>Название *</label>
-            <input value={form.name} onChange={(e) => set('name', e.target.value)} />
+            <input
+              value={form.name}
+              onChange={(e) => set('name', e.target.value)}
+              style={inputStyle('name')}
+            />
+            {fieldError?.field === 'name' && (
+              <span style={{ color: '#c62828', fontSize: 12 }}>{fieldError.message}</span>
+            )}
           </div>
           <div className="form-row">
             <div className="field">
@@ -152,7 +196,15 @@ function ServiceForm({ service, onClose, onSaved, onError }: {
             </div>
             <div className="field">
               <label>Базовая стоимость, ₽ *</label>
-              <input type="number" min={0} value={form.basePrice} onChange={(e) => set('basePrice', Number(e.target.value))} />
+              <input
+                type="number" min={0}
+                value={form.basePrice}
+                onChange={(e) => set('basePrice', Number(e.target.value))}
+                style={inputStyle('basePrice')}
+              />
+              {fieldError?.field === 'basePrice' && (
+                <span style={{ color: '#c62828', fontSize: 12 }}>{fieldError.message}</span>
+              )}
             </div>
           </div>
           <div className="form-row">
@@ -162,7 +214,15 @@ function ServiceForm({ service, onClose, onSaved, onError }: {
             </div>
             <div className="field">
               <label>Срок (дней) *</label>
-              <input type="number" min={1} value={form.baseDays} onChange={(e) => set('baseDays', Number(e.target.value))} />
+              <input
+                type="number" min={1}
+                value={form.baseDays}
+                onChange={(e) => set('baseDays', Number(e.target.value))}
+                style={inputStyle('baseDays')}
+              />
+              {fieldError?.field === 'baseDays' && (
+                <span style={{ color: '#c62828', fontSize: 12 }}>{fieldError.message}</span>
+              )}
             </div>
           </div>
           <div className="form-row">
