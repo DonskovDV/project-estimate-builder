@@ -232,11 +232,24 @@ tr:hover td { background: #f9f9f9; }
   .table-clients th:nth-child(4), .table-clients td:nth-child(4),
   .table-clients th:nth-child(5), .table-clients td:nth-child(5) { display: none; }
 
+  /* Services table: hide Категория(2), Себестоимость(4), Срок(5), Обяз.(6) */
+  .table-services th:nth-child(2), .table-services td:nth-child(2),
+  .table-services th:nth-child(4), .table-services td:nth-child(4),
+  .table-services th:nth-child(5), .table-services td:nth-child(5),
+  .table-services th:nth-child(6), .table-services td:nth-child(6) { display: none; }
+
+  /* Analytics breakdown grid: 3 cols → 1 col */
+  .analytics-breakdown-grid { grid-template-columns: 1fr !important; }
+
+  /* Analytics cards: smaller value font */
+  .analytics-card .value { font-size: 22px; }
+
   /* Estimate grid: 2 cols on mobile */
   .estimate-grid { grid-template-columns: repeat(2, 1fr); }
   .estimate-header { flex-wrap: wrap; }
 
-  /* ProjectDetail action buttons wrap */
+  /* ProjectDetail title row and action buttons wrap */
+  .project-title-row { flex-wrap: wrap; }
   .project-actions { flex-wrap: wrap; gap: 6px !important; }
 
   /* Modal */

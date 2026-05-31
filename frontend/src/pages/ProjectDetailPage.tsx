@@ -48,7 +48,7 @@ export default function ProjectDetailPage({ id, nav }: { id: number; nav: Nav })
   return (
     <div>
       <div className="section-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div className="project-title-row" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button className="btn btn-ghost btn-sm" onClick={nav.goProjects}>← Проекты</button>
           <h2 style={{ margin: 0 }}>{project.name}</h2>
           <span className="badge" style={{ background: STATUS_COLORS[project.status] }}>

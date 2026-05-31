@@ -47,7 +47,7 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
+      <div className="analytics-breakdown-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
         {/* By status */}
         <div className="card">
           <div className="card-title" style={{ marginBottom: 12 }}>Проекты по статусам</div>

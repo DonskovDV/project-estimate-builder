@@ -45,7 +45,7 @@ export default function ServicesPage() {
         <div className="loading">Загрузка...</div>
       ) : (
         <div className="card" style={{ padding: 0 }}>
-          <table>
+          <table className="table-services">
             <thead>
               <tr>
                 <th>Услуга</th>
