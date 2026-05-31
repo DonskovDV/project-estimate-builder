@@ -51,7 +51,7 @@ export default function ProjectsPage({ nav }: { nav: Nav }) {
         <div className="loading">Загрузка...</div>
       ) : (
         <div className="card" style={{ padding: 0 }}>
-          <table>
+          <table className="table-projects">
             <thead>
               <tr>
                 <th>Проект</th>

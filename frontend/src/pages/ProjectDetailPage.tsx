@@ -55,7 +55,7 @@ export default function ProjectDetailPage({ id, nav }: { id: number; nav: Nav })
             {PROJECT_STATUSES[project.status]}
           </span>
         </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div className="project-actions" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <button className="btn btn-ghost btn-sm" onClick={() => setShowEditForm(true)}>✏ Редактировать</button>
           {!deletePending ? (
             <button className="btn btn-danger btn-sm" onClick={() => setDeletePending(true)}>Удалить проект</button>

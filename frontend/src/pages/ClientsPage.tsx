@@ -53,8 +53,8 @@ export default function ClientsPage({ nav }: { nav: Nav }) {
       {loading ? (
         <div className="loading">Загрузка...</div>
       ) : (
-        <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
-          <table style={{ minWidth: 700 }}>
+        <div className="card" style={{ padding: 0 }}>
+          <table className="table-clients">
             <thead>
               <tr>
                 <th>Компания</th>
