@@ -19,6 +19,7 @@ RUN cd backend && npx prisma generate && npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 
+RUN apk add --no-cache openssl
 RUN mkdir -p /app/data
 
 COPY --from=backend-builder /app/backend/dist ./dist
