@@ -13,7 +13,7 @@ FROM base AS backend-builder
 COPY backend/package*.json ./backend/
 RUN cd backend && npm ci
 COPY backend/ ./backend/
-RUN cd backend && npx prisma generate && npm run build && npx tsc -p tsconfig.seed.json
+RUN cd backend && npx prisma generate && npm run build
 
 # Production image
 FROM node:20-alpine AS runner
@@ -31,4 +31,4 @@ ENV PORT=3000
 
 EXPOSE 3000
 
-CMD sh -c "npx prisma migrate deploy && node dist/prisma/seed.js && node dist/index.js"
+CMD sh -c "npx prisma migrate deploy && node dist/seed.js && node dist/index.js"
