@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request } from 'express';
 import { z } from 'zod';
 import prisma from '../lib/prisma';
 import { AppError } from '../middleware/errorHandler';
@@ -15,7 +15,7 @@ const createEstimateSchema = z.object({
 });
 
 // POST /api/projects/:id/estimates
-router.post('/', async (req, res, next) => {
+router.post('/', async (req: Request<{ id: string }>, res, next) => {
   try {
     const projectId = Number(req.params.id);
     const project = await prisma.project.findUnique({ where: { id: projectId } });
@@ -84,7 +84,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // GET /api/projects/:id/estimates
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: Request<{ id: string }>, res, next) => {
   try {
     const projectId = Number(req.params.id);
     const project = await prisma.project.findUnique({ where: { id: projectId } });
